@@ -12,7 +12,7 @@
     </tr>
     <tr>
         <td align="left"> <b> Consultant </b> </td>
-        <td> Name Surname, PhD/DSc </td>
+        <td> Ivan Papay </td>
     </tr>
     <tr>
         <td align="left"> <b> Advisor </b> </td>
