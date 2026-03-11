@@ -3,7 +3,7 @@
 \PassOptionsToPackage{numbers, sort, compress}{natbib}
 \usepackage[main,final]{neurips_2025}
 
-\usepackage[T2]{fontenc}
+\usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
 \usepackage{hyperref}
@@ -110,6 +110,45 @@ TODO
 
 \textbf{Topic \#2.}
 TODO
+
+\section{Постановка задачи}\label{sec:problem_statement}
+
+\subsection{Мультиязычная коллекция документов}
+Рассмотрим коллекцию текстов $\mathcal{D}$, написанных на языках из семейства $\mathcal{L}$ на темы из семейства $\mathcal{T}$. Пусть $d_{t, l}$ --- текст на языке $l \in \mathcal{L}$ на тему $t \in \mathcal{T}$. Будем считать, что для каждой темы $t \in \mathcal{T}$ и для любой пары языков $l_1, l_2 \in \mathcal{L}$ тексты $d_{t,l_1}$ и $d_{t,l_2}$ являются переводами друг друга. Тогда вся коллекция текстов:
+$$\mathcal{D} = \{d_{t, l} \mid l \in \mathcal{L}, t \in \mathcal{T} \}.$$
+Обозначим коллекцию текстов на языке $l$
+$$\mathcal{D}_l = \{d_{t, l} \mid t \in \mathcal{T} \},$$
+а коллекцию текстов на тему $t$ на разных языках
+$$\mathcal{D}_t = \{d_{t, l} \mid l \in \mathcal{L} \}.$$
+
+\subsection{Построение индекса текста}
+После токенизации каждый текст $d_{t,l}$ представим в виде последовательности токенов:
+$$d_{t,l} = [w_{t,l}^1, w_{t,l}^2, \dots, w_{t,l}^{N_{t,l}}],$$
+где $N_{t,l}$ --- длина текста $d_{t,l}$ в токенах.
+
+Пусть также текст $d_{t,l}$ разбит на фрагменты:
+$$d_{t,l} = [f_{t,l}^1 \sqcup f_{t,l}^2 \sqcup \dots \sqcup f_{t,l}^{M_{t,l}}],$$
+где каждый фрагмент текста является последовательностью токенов этого текста
+$$f_{t,l}^k = [w_{t,l}^{k, 1}, w_{t,l}^{k, 2}, \dots, w_{t,l}^{k,|f_{t,l}^k|}],$$
+где $|f_{t,l}^k|$ --- длина фрагмента в токенах.
+
+Для каждого текста $d_{t,l}$ и для каждого его фрагмента $f_{t,l}^k$ с помощью языковой модели $\mathcal{M}$ получим эмбеддинги токенов. Для фрагмента $f_{t,l}^k = [w_{t,l}^{i_k}, \dots, w_{t,l}^{j_k}]$ получим последовательность векторов:
+$$\mathcal{M}(f_{t,l}^k) = \mathbf{E}_{t,l}^k \in \mathbb{R}^{|f_{t,l}^k| \times m},$$
+где $\mathbf{E}_{t,l}^k = [\mathbf{e}_{t,l}^{k,1}, \mathbf{e}_{t,l}^{k,2}, \dots, \mathbf{e}_{t,l}^{k,|f_{t,l}^k|}]$ --- последовательность эмбеддингов для $f_{t,l}^k$, $m$ --- размерность эмбеддинга, $\mathbf{e}_{t,l}^{k,s} \in \mathbb{R}^m$.
+
+Для каждого фрагмента $f_{t,l}^k$ для полученного множества эмбеддингов $\mathbf{E}_{t,l}^k$ вычислим внутреннюю размерность PHD:
+$$\rho \left(f_{t,l}^k \right) = \operatorname{PHD}\left(\mathbf{E}_{t,l}^k \right).$$
+
+Для текста $d_{t, l}$ его \emph{индексом} назовём последовательность внутренних размерностей его фрагментов.
+
+$$I\left(d_{t, l}\right) = \left( \rho \left(f_{t,l}^1 \right), \rho \left(f_{t,l}^2 \right), \dots, \rho \left(f_{t,l}^{M_{t, l}} \right) \right) \in \mathbb{R}^{M_{t, l}}.$$
+
+Таким образом, каждому тексту $d_{t,l}$ сопоставляется его индекс $I\left(d_{t, l}\right)$, полученный в результате цепочки преобразований:
+\begin{gather*}
+d_{t,l} \rightarrow [w_{t,l}^1, w_{t,l}^2, \dots, w_{t,l}^{N_{t,l}}] \rightarrow [f_{t,l}^1 \sqcup f_{t,l}^2 \sqcup \dots \sqcup f_{t,l}^{M_{t,l}}] \xrightarrow{\mathcal{M}} \\ \xrightarrow{\mathcal{M}} [\mathbf{E}_{t,l}^1, \mathbf{E}_{t,l}^2, \dots, \mathbf{E}_{t,l}^{M_{t,l}}] \xrightarrow{\operatorname{PHD}}  [\rho \left(f_{t,l}^1 \right), \rho\left(f_{t,l}^2 \right), \dots, \rho\left(f_{t,l}^{M_{t,l}} \right)] \rightarrow I(d_{t,l}).\end{gather*}
+
+Индекс $\mathcal{I}(d_{t,l})$ рассматривается как инвариантное относительно перевода представление текста.
+
 
 \section{Preliminaries}\label{sec:prelim}
 
