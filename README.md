@@ -16,7 +16,7 @@
     </tr>
     <tr>
         <td align="left"> <b> Advisor </b> </td>
-        <td> Andrii Hraboviy, PhD </td>
+        <td> Andrey Grabovoy, PhD </td>
     </tr>
 </table>
 
